@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: nahora-staging
+    runtime: node
+    plan: starter
+    region: singapore
+    branch: feature/backend-mvp
+    autoDeploy: false
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: nahora-staging-db
+          property: connectionString
+      - key: NAHORA_ADMIN_EMAIL
+        sync: false
+      - key: NAHORA_ADMIN_PASSWORD
+        sync: false
+
+databases:
+  - name: nahora-staging-db
+    databaseName: nahora_staging
+    user: nahora_staging
+    plan: basic-256mb
+    region: singapore
+    ipAllowList: []
